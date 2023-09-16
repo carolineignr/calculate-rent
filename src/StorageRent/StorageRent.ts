@@ -1,8 +1,8 @@
 
 export type MonthlyRentRecord = {
-    vacancy: boolean,
-    rentAmount: number,
-    rentDueDate: Date
+  vacancy: boolean,
+  rentAmount: number,
+  rentDueDate: Date
 }
 
 export type MonthlyRentRecords = Array<MonthlyRentRecord>;
@@ -19,11 +19,15 @@ export type MonthlyRentRecords = Array<MonthlyRentRecord>;
  * @param rentChangeRate : The rate to increase or decrease rent, input as decimal (not %), positive for increase, negative for decrease (Number),
  * @returns Array<MonthlyRentRecord>;
  */
-export function calculateMonthlyRent(baseMonthlyRent: number, leaseStartDate: Date, windowStartDate: Date, 
-    windowEndDate: Date, dayOfMonthRentDue: number, rentRateChangeFrequency: number, rentChangeRate: number) {
+export function calculateMonthlyRent(baseMonthlyRent: number, leaseStartDate: Date, windowStartDate: Date,
+  windowEndDate: Date, dayOfMonthRentDue: number, rentRateChangeFrequency: number, rentChangeRate: number) {
 
-    const monthlyRentRecords : MonthlyRentRecords = [];
-    return monthlyRentRecords;    
+  // Continuar a partir daqui 
+  console.log('calculateMontly module call is working');
+  return;
+
+  const monthlyRentRecords: MonthlyRentRecords = [];
+  return monthlyRentRecords;
 }
 
 /**
@@ -35,7 +39,7 @@ export function calculateMonthlyRent(baseMonthlyRent: number, leaseStartDate: Da
  * 
  */
 function calculateNewMonthlyRent(baseMonthlyRent: number, rentChangeRate: number) {
-    return baseMonthlyRent * (1 + rentChangeRate);
+  return baseMonthlyRent * (1 + rentChangeRate);
 }
 
 /**
@@ -46,5 +50,5 @@ function calculateNewMonthlyRent(baseMonthlyRent: number, rentChangeRate: number
  * 
  */
 function isLeapYear(year: number) {
-    return (year % 4 == 0 && year % 100 != 0);
+  return (year % 4 == 0 && year % 100 != 0);
 }
