@@ -1,9 +1,6 @@
-import { calculateMonthlyRent, MonthlyRentRecord, MonthlyRentRecords } from "../../StorageRent/StorageRent";
+import { calculateMonthlyRent } from "../../StorageRent/StorageRent";
 
 describe("calculateMonthlyRent function", () => {
-
-  // tested
-
   it("should return MonthlyRentRecords validate when first payment is EQUAL to due date - increase rent change and no vacancy", () => {
     const baseMonthlyRent = 100.00;
     const leaseStartDate = new Date("2023-01-01T00:00:00");
@@ -105,7 +102,7 @@ describe("calculateMonthlyRent function", () => {
 
     expect(result).toEqual(expectedResult);
   })
-  
+
   it("should return MonthlyRentRecords validate due date on 31th and rent due on 28 days month", () => {
     const baseMonthlyRent = 100.00;
     const leaseStartDate = new Date("2023-01-31T00:00:00");
@@ -140,7 +137,83 @@ describe("calculateMonthlyRent function", () => {
     expect(result).toEqual(expectedResult);
   })
 
-  // to test
-  
+  it("should return MonthlyRentRecords validate first payment due date and first month pro-rate when lease start is BEFORE monthly due date", () => {
+    const baseMonthlyRent = 100.00;
+    const leaseStartDate = new Date("2023-01-01T00:00:00");
+    const windowStartDate = new Date("2023-01-01T00:00:00");
+    const windowEndDate = new Date("2023-03-31T00:00:00");
+    const dayOfMonthRentDue = 15;
+    const rentRateChangeFrequency = 1;
+    const rentChangeRate = .1;
+
+    const result = calculateMonthlyRent(baseMonthlyRent,
+      leaseStartDate, windowStartDate, windowEndDate,
+      dayOfMonthRentDue, rentRateChangeFrequency, rentChangeRate);
+
+    let expectedResult = [
+      {
+        vacancy: false,
+        rentAmount: 46.67,
+        rentDueDate: new Date("2023-01-01T00:00:00")
+      },
+      {
+        vacancy: false,
+        rentAmount: 100,
+        rentDueDate: new Date("2023-01-15T00:00:00")
+      },
+      {
+        vacancy: false,
+        rentAmount: 110.00,
+        rentDueDate: new Date("2023-02-15T00:00:00")
+      },
+      {
+        vacancy: false,
+        rentAmount: 121.00,
+        rentDueDate: new Date("2023-03-15T00:00:00")
+      }
+    ];
+
+    expect(result).toEqual(expectedResult);
+  })
+
+  it("should return MonthlyRentRecords validate first payment due date and first month pro-rate when lease start is AFTER monthly due date", () => {
+
+    const baseMonthlyRent = 100.00;
+    const leaseStartDate = new Date("2023-01-20T00:00:00");
+    const windowStartDate = new Date("2023-01-01T00:00:00");
+    const windowEndDate = new Date("2023-03-31T00:00:00");
+    const dayOfMonthRentDue = 15;
+    const rentRateChangeFrequency = 1;
+    const rentChangeRate = .1;
+
+    const result = calculateMonthlyRent(baseMonthlyRent,
+      leaseStartDate, windowStartDate, windowEndDate,
+      dayOfMonthRentDue, rentRateChangeFrequency, rentChangeRate);
+
+    let expectedResult = [
+      {
+        vacancy: false,
+        rentAmount: 83.33,
+        rentDueDate: new Date("2023-01-20T00:00:00")
+      },
+      {
+        vacancy: false,
+        rentAmount: 100,
+        rentDueDate: new Date("2023-01-15T00:00:00")
+      },
+      {
+        vacancy: false,
+        rentAmount: 110.00,
+        rentDueDate: new Date("2023-02-15T00:00:00")
+      },
+      {
+        vacancy: false,
+        rentAmount: 121.00,
+        rentDueDate: new Date("2023-03-15T00:00:00")
+      }
+    ];
+
+    expect(result).toEqual(expectedResult);
+  })
 
 });

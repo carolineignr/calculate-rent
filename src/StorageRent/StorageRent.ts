@@ -21,10 +21,11 @@ export type MonthlyRentRecords = Array<MonthlyRentRecord>;
  */
 export function calculateMonthlyRent(baseMonthlyRent: number, leaseStartDate: Date, windowStartDate: Date,
   windowEndDate: Date, dayOfMonthRentDue: number, rentRateChangeFrequency: number, rentChangeRate: number) {
-  const monthlyRentRecords: MonthlyRentRecords = [];
   let montlyRent = baseMonthlyRent;
   let incrementMonths = 0;
+  let isProrated = true;
 
+  const monthlyRentRecords: MonthlyRentRecords = [];
   const leaseYear = leaseStartDate.getFullYear();
   const leaseStartMonth = leaseStartDate.getMonth();
   const leaseStartDay = leaseStartDate.getDate();
@@ -38,30 +39,40 @@ export function calculateMonthlyRent(baseMonthlyRent: number, leaseStartDate: Da
     incrementMonths++;
 
     if (dayOfMonthRentDue > leaseStartDay) {
-      return;
-    }
+      if (isProrated) {
+        const leaseContractDate = new Date(leaseYear, leaseStartMonth, dayOfMonthRentDue);
+        const occupiedDaysByTenant = Math.ceil((leaseContractDate.getTime() - leaseStartDate.getTime()) / (1000 * 60 * 60 * 24));
+        const proration = parseFloat(((baseMonthlyRent / 30) * (occupiedDaysByTenant)).toFixed(2));
 
-    if (dayOfMonthRentDue === leaseStartDay) {
-      if (index !== leaseStartMonth) {
-        dueDate = getDueDate(leaseYear, index, dayOfMonthRentDue);
+        monthlyRentRecords.push({ vacancy, rentAmount: proration, rentDueDate: leaseStartDate });
+
+        isProrated = false;
       }
-
-      montlyRent = calculateMontlyRent(
-        index,
-        windowStartMonth,
-        incrementMonths,
-        rentRateChangeFrequency,
-        vacancy,
-        rentChangeRate,
-        montlyRent
-      );
-
-      monthlyRentRecords.push({ vacancy, rentAmount: montlyRent, rentDueDate: dueDate });
     }
 
     if (dayOfMonthRentDue < leaseStartDay) {
-      return;
+      if (isProrated) {
+        const proration = parseFloat((baseMonthlyRent * (1 - (leaseStartDay - dayOfMonthRentDue) / 30)).toFixed(2))
+
+        monthlyRentRecords.push({ vacancy, rentAmount: proration, rentDueDate: leaseStartDate });
+
+        isProrated = false;
+      }
     }
+
+    dueDate = getDueDate(leaseYear, index, dayOfMonthRentDue);
+
+    montlyRent = calculateMontlyRent(
+      index,
+      windowStartMonth,
+      incrementMonths,
+      rentRateChangeFrequency,
+      vacancy,
+      rentChangeRate,
+      montlyRent
+    );
+
+    monthlyRentRecords.push({ vacancy, rentAmount: montlyRent, rentDueDate: dueDate });
   }
 
   return monthlyRentRecords;
@@ -88,14 +99,6 @@ function calculateNewMonthlyRent(baseMonthlyRent: number, rentChangeRate: number
  */
 function isLeapYear(year: number) {
   return (year % 4 == 0 && year % 100 != 0);
-}
-
-function calculateProrated(year: number, month: number) {
-  if (month === 1) {
-    const febDays = isLeapYear(year) ? 29 : 28;
-  };
-
-  return;
 }
 
 function isVacancy(currentMonth: number, leaseStartMonth: number) {
