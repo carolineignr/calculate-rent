@@ -1,14 +1,4 @@
 
-# Candidate Preparation
-To successfully complete the coding test the candidate will need access to an environment with the following installed:
-1. [Node.js](https://nodejs.org/en)
-2. [TypeScript.js](https://www.typescriptlang.org/download)
-3. [Jest](https://www.typescriptlang.org/download)
-4. [ts-jest](https://jestjs.io/docs/getting-started#via-ts-jest)
-5. [Visual Studio Code](https://code.visualstudio.com) or other preferred text editor compatible with TypeScript
-
-**Note:** If candidate is unfamiliar with TypeScript it is suggested they review this [TypeScript Tutorial](https://www.w3schools.com/typescript/)
-
 # Technical Interview
 
 ## Storage Rent Owed In Window
@@ -35,12 +25,6 @@ The rent can either be increased or decreased by a set rate. e.g. .1 = 10% incre
 If the rent price changes between the previous due date and the next due date, then the new rent price will go into effect on the next due date.
 
 Rent can only increase when the unit is rented and can only decrease while it is vacant.
-
-### Task: ###
-
-Complete the code in `src/StorageRent/StorageRent.ts` to return a list of rent payments due within a given time window. DO NOT change completed helper functions.
-
-Your solution should include unit tests that validate each possible case. We have provided the first couple of tests for you in `test/StorageRent/StorageRent.test.ts`. You should write additional tests to cover remaining cases.
 
 **Inputs:**
 - `baseMonthlyRent`: The base or starting monthly rent for unit (Number)
