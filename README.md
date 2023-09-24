@@ -1,6 +1,3 @@
-
-# Technical Interview
-
 ## Storage Rent Owed In Window
 
 A storage unit charges rent monthly. Rent is due on the first day of a tenant's lease and then on a specified day of the month each month thereafter. Note: If the day specified is greater than the number of days in the month, rent is due on the last day of the month.
